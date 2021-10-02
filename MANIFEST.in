@@ -1,0 +1,6 @@
+include LICENSE
+include README.md
+global-exclude *.pyc
+global-exclude *.json
+global-exclude *.png
+global-exclude *.html
