@@ -31,3 +31,28 @@ class LinearRegression:
     def predict(self, test_x):
         preds = [i*self.beta1+self.beta0 for i in test_x]
         return preds.copy()
+
+class MultiLinearRegression:
+    def __init__(self, eps=1e-4):
+        self.eps = eps
+    
+    def compute_loss(self):
+        y_pred = self.predict(self.x)
+        sse = sum((i-j)**2 for i, j in zip(self.y, y_pred))
+        self.sigma = (sse / (len(self.x)-self.x.shape[1])) ** (0.5)
+        return self.sigma
+    
+    def train(self, train_x:np.array, train_y:list):
+        self.x = train_x.copy()
+        self.y = train_y.copy()
+
+        self.H = np.dot(self.x.T, self.x)
+        self.H_inv = np.linalg.inv(self.H)
+
+        self.w = np.dot(self.H_inv, np.dot(self.H.T, self.y))
+        
+        return self
+
+    def predict(self, test_x):
+        preds = np.dot(self.w, test_x.T)
+        return preds.copy()
