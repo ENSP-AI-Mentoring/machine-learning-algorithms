@@ -36,13 +36,14 @@ class NaiveBayes:
     def train(self, train_x: np.array, train_y):
         self.likelihoods = [
             likelihoods_table(train_x[:, i], train_y, self.eps).to_dict()
-            for i in train_x.shape[1]
+            for i in range(train_x.shape[1])
         ]
         self.prior = prior_probability(train_y).to_dict()
+        return self
 
     def _posterior_proba(self, test_x: np.array, target):
         predictions = np.array([
-            [likelihood.get(line, {}).get(target, np.log(self.eps)) for line in lines] for likelihood, lines in zip(self.likelihoods, test_x.T)
+            [likelihood[target].get(line, np.log(self.eps)) for line in lines] for likelihood, lines in zip(self.likelihoods, test_x.T)
         ])
         predictions = predictions.sum(axis=1) + self.prior[target]
         return predictions
@@ -51,4 +52,6 @@ class NaiveBayes:
         self.probs = {
             target: self._posterior_proba(test_x, target) for target in self.prior
         }
-        return pd.DataFrame(self.probs).T
+        self.probs = pd.DataFrame(self.probs)
+        self.classes = np.argmax(self.probs.values, axis=1)
+        return self.classes
