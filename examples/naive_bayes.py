@@ -2,7 +2,7 @@ from algorithms.bayes_classification import NaiveBayes
 import os
 import pandas as pd
 
-def test_naive_bayes_algorithms():
+def test_naive_bayes_algorithm():
     data = pd.read_csv(os.getcwd() + "./dataset/dataset.csv")
     train = data[:-10]
     test = data[-10:]
