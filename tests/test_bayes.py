@@ -1,5 +1,5 @@
 
-from algorithms.bayes_classification import likehoods_table, prior_probability
+from algorithms.bayes_classification import likelihoods_table, prior_probability
 import numpy as np
 
 def test_count_on_object():
@@ -13,7 +13,7 @@ def test_count_on_object():
         [0, 1/5],
     ]) + 1e-6
     espected = np.log(espected)
-    data = likehoods_table(x, y, eps=1e-6)
+    data = likelihoods_table(x, y, eps=1e-6)
     assert np.mean(espected == data.values)==1
 
 def test_prior_probability():

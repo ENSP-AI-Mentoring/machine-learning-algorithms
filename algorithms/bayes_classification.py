@@ -2,12 +2,13 @@ import collections
 import numpy as np
 import pandas as pd
 
-def likehoods_table(x, y, eps=1e-6):
-    """
-        For each category in x, count probability of each class in y
 
-        Return :
-            n distinct category of x * m distinct classes
+def likelihoods_table(x, y, eps=1e-6):
+    """
+    For each category in x, count probability of each class in y
+
+    Return :
+        n distinct category of x * m distinct classes
     """
     count = collections.defaultdict(dict)
     for i, j in zip(x, y):
@@ -17,10 +18,37 @@ def likehoods_table(x, y, eps=1e-6):
     df = df.T
     col_sum = df.sum(axis=0)
     df = df.divide(col_sum) + eps
-    df = np.log(df)
+    df: pd.DataFrame = np.log(df)
     return df
+
 
 def prior_probability(y):
     count = pd.Series(y)
     count = count.value_counts(normalize=True)
-    return np.log(count)
+    count: pd.Series = np.log(count)
+    return count
+
+
+class NaiveBayes:
+    def __init__(self, eps=1e-6):
+        self.eps = eps
+
+    def train(self, train_x: np.array, train_y):
+        self.likelihoods = [
+            likelihoods_table(train_x[:, i], train_y, self.eps).to_dict()
+            for i in train_x.shape[1]
+        ]
+        self.prior = prior_probability(train_y).to_dict()
+
+    def _posterior_proba(self, test_x: np.array, target):
+        predictions = np.array([
+            [likelihood.get(line, {}).get(target, np.log(self.eps)) for line in lines] for likelihood, lines in zip(self.likelihoods, test_x.T)
+        ])
+        predictions = predictions.sum(axis=1) + self.prior[target]
+        return predictions
+
+    def predict(self, test_x):
+        self.probs = {
+            target: self._posterior_proba(test_x, target) for target in self.prior
+        }
+        return pd.DataFrame(self.probs).T
