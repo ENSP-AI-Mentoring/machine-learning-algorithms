@@ -46,13 +46,13 @@ class MultiLinearRegression:
         self.x = train_x.copy()
         self.y = train_y.copy()
 
-        self.H = np.dot(self.x.T, self.x)
-        self.H_inv = np.linalg.inv(self.H)
+        dot = np.dot(self.x.T, self.x)
+        inv = np.linalg.inv(dot)
 
-        self.w = np.dot(self.H_inv, np.dot(self.H.T, self.y))
+        self.w = np.dot(inv, np.dot(self.x.T, self.y))
         
         return self
 
     def predict(self, test_x):
-        preds = np.dot(self.w, test_x.T)
+        preds = np.dot(test_x, self.w)
         return preds.copy()
