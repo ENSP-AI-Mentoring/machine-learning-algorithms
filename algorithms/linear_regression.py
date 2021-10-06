@@ -14,3 +14,8 @@ class LinearRegression:
 
         self.beta1 = (mean_xy - mean_x*mean_y/n) / (mean_xx - mean_x**2/n)
         self.beta0 = (mean_y - mean_x*self.beta1) / n
+        return self
+
+    def predict(self, test_x):
+        self.preds = [i*self.beta1+self.beta0 for i in test_x]
+        return self.preds.copy()
