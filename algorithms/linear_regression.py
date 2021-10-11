@@ -38,7 +38,7 @@ class MultiLinearRegression:
     
     def compute_loss(self):
         y_pred = self.predict(self.x)
-        sse = sum((i-j)**2 for i, j in zip(self.y, y_pred))
+        sse = np.sum((i-j)**2 for i, j in zip(self.y, y_pred))
         self.sigma = (sse / (len(self.x)-self.x.shape[1])) ** (0.5)
         return self.sigma
     

@@ -26,3 +26,5 @@ def test_multi_linear_regression_algorithm():
     model = MultiLinearRegression().train(x, y)
     print(test_y)
     print(model.predict(test_x))
+
+    print(model.compute_loss())
