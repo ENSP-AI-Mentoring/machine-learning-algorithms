@@ -1,4 +1,5 @@
 import collections
+
 import numpy as np
 import pandas as pd
 
@@ -42,9 +43,12 @@ class NaiveBayes:
         return self
 
     def _posterior_proba(self, test_x: np.array, target):
-        predictions = np.array([
-            [likelihood[target].get(line, np.log(self.eps)) for line in lines] for likelihood, lines in zip(self.likelihoods, test_x.T)
-        ])
+        predictions = np.array(
+            [
+                [likelihood[target].get(line, np.log(self.eps)) for line in lines]
+                for likelihood, lines in zip(self.likelihoods, test_x.T)
+            ]
+        )
         predictions = predictions.sum(axis=1) + self.prior[target]
         return predictions
 
