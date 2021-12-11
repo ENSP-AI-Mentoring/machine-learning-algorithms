@@ -1,39 +1,24 @@
 # machine-learning-algorithms
 Implementation from scratch of some machine learning algorithms
 
-## Linear Regression Model
-
-## Logistic Regression
-
-## Bayes
-
-## Perceptron
-
-## Decision Tree
-
-## SVM
-
-# Development process
 ## Dev
 
 Utilisation de pyenv : https://github.com/pyenv/pyenv
 
 ## Version python
 
-3.8
+3.6, 3.7, 3.8, 3.9, 3.10
 
 ## Needed
 
-> virtualenv .venv
-
+> pyenv install 3.6.9 3.7.10 3.8.9 3.9.4 3.10a7
+> python -m venv .venv
 > . .venv/bin/activate
-
 > pip install -r requirements.txt
 
 ## CI
 
 > pyenv local 3.6.9 3.7.10 3.8.9 3.9.4 3.10a7
-
 > tox
 
 ## Build
