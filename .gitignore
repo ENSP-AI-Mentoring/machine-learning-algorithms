@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 dataset/*
 .vscode
-*.ipynb
+.config
+*/dataset/*
