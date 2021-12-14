@@ -105,7 +105,7 @@ class VAE:
 
         return np.array(hist_loss)
 
-    def test1(self, batch_size):
+    def generate_from_test_data(self, batch_size):
         """data reconstruction test"""
         test_dataloader = DataLoader(
             self.test_data, batch_size, shuffle=True, drop_last=True, num_workers=0
@@ -126,7 +126,7 @@ class VAE:
 
         return data, Xstar
 
-    def test2(self, batch_size):
+    def generate_from_latent_space(self, batch_size):
         """distribution transformation test(generate artificial dataset from random noises)"""
         Z = torch.randn((batch_size, self.latent_dim)).to(self.device)
         Xstar = self._decoding(Z).view((-1, *self.example_size))
