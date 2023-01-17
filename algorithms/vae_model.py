@@ -11,7 +11,7 @@ class Encoder(nn.Module):
 
         shape_layers = [in_dim] + hidden_layers
         layers = [
-            [nn.Linear(i, j,  device=device), nn.SELU()] for i, j in zip(shape_layers[:-1], shape_layers[1:])
+            [nn.Linear(i, j,  device=device), nn.ReLU()] for i, j in zip(shape_layers[:-1], shape_layers[1:])
         ]
         layers = [
             layer for c_layers in layers for layer in c_layers
@@ -31,7 +31,7 @@ class Decoder(nn.Module):
 
         shape_layers = [latent_dim] + hidden_layers
         layers = [
-            [nn.Linear(i, j,  device=device), nn.SELU()] for i, j in zip(shape_layers[:-1], shape_layers[1:])
+            [nn.Linear(i, j,  device=device), nn.ReLU()] for i, j in zip(shape_layers[:-1], shape_layers[1:])
         ]
         layers = [
             i for j in layers for i in j
@@ -91,6 +91,7 @@ class VAE:
 
         tk = tqdm(range(max_epoch))
         for epoch in tk:
+            res = []
             for ii, data in enumerate(train_dataloader):
                 Xground = data.view((batch_size, -1)).to(self.device)
 
@@ -100,8 +101,9 @@ class VAE:
                 # backward propagate
                 loss.backward()
                 optimizer.step()
-                hist_loss.append(loss.item())
-            tk.set_postfix({"val_loss": hist_loss[-1], "epoch": epoch})
+                res.append(loss.item())
+            hist_loss.append(res)
+            tk.set_postfix({"val_loss": res[-1], "epoch": epoch})
 
         return np.array(hist_loss)
 
@@ -144,7 +146,7 @@ class VAE:
 
         # likelihood loss
         epsi = torch.randn(z_logstd.size()).to(self.device)
-        z_star = z_mean + torch.exp(0.5 * z_logstd) * epsi  # reparameterize trick
+        z_star = z_mean + z_logstd * epsi  # torch.exp(0.5 * z_logstd) # reparameterize trick
         Xstar = self._decoding(z_star)
 
         llh_loss = Xground * torch.log(1e-12 + Xstar) + (1 - Xground) * torch.log(
